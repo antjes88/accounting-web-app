@@ -1,30 +1,66 @@
-from blueprints.ecb_rates.functions.ecbexchange import from_xml_to_dataframe, DAYS_TO_REGISTER
+from blueprints.ecb_rates.functions.ecb_exchange_rates import from_xml_to_dataframe, call_to_ecb_api_exchange_rate
+from blueprints.ecb_rates.routes import DAYS_TO_REGISTER
+import pytest
+import os
+import pandas as pd
 import datetime as dt
 
 
-def test_from_xml_to_dataframe(xml_test_file_content, result_expected_xml_test_file_content):
-    exchange_rates = from_xml_to_dataframe(xml_test_file_content)
+def test_from_xml_to_dataframe():
+    """
+    GIVEN an answer from ECB API
+    WHEN it is processed by function from_xml_to_dataframe()
+    THEN it should be the equal to result_expected_from_xml
+    """
+    with open(os.path.join(os.getcwd(), 'tests/data/xml_ecb_test.xml')) as f:
+        exchange_rates = from_xml_to_dataframe(f.read())
 
-    # this column is created with the datetime of the moment so can not be compare
-    exchange_rates.drop(columns=['Created'], inplace=True)
+    # this column is created with the datetime of the moment so cannot be compared
+    exchange_rates.drop(columns=['eur_exchange_rate_created_date'], inplace=True)
 
-    comparison = exchange_rates.sort_index().sort_index(
-        axis=1).values == result_expected_xml_test_file_content.sort_index().sort_index(axis=1).values
-    assert comparison.all().all()
+    data = {
+        "eur_exchange_rate_date": ["2021-05-26", "2021-05-27", "2021-05-28"],
+        "eur_exchange_rate_to_gbp": [0.8633, 0.86068, 0.85765],
+        "eur_exchange_rate_to_dollar": [1.2229, 1.2198, 1.2142],
+        "eur_exchange_rate_created_by": ["System", "System", "System"],
+    }
+    result_expected_from_xml = pd.DataFrame(data)
+
+    assert exchange_rates.equals(result_expected_from_xml)
 
 
-def test_refresh_rates_ecb(change_temporally_ecb_database, client, db_conn):
-    response = client.get_with_login('ecb_rates.refresh_rates_ecb', follow_redirects=True)
+@pytest.fixture(scope='function')
+def truncate_ecb__eur_exchange_rate(db_conn):
+    """
+    Fixture that ensures that ecb.eur_exchange_rate is truncated before and after the test.
 
-    # # this is to get how many weekdays are in the interval extracted. This is due to the fact that the ECB API only
-    # # provides rates for weekdays
-    # total_week_days = 0
-    # for x in range(0, DAYS_TO_REGISTER + 1):
-    #     if (dt.datetime.date(dt.datetime.now()) - dt.timedelta(x)).isoweekday() not in [6, 7]:
-    #         total_week_days += 1
+    Args:
+        db_conn: call to fixture that creates connector to db
+    """
+    db_conn.execute("TRUNCATE TABLE ecb.eur_exchange_rate")
+    yield
+    db_conn.execute("TRUNCATE TABLE ecb.eur_exchange_rate")
 
-    days_inserted = db_conn.query("SELECT COUNT(*) FROM bce.EuroaRatio").values[0]
 
-    assert 200 == response.status_code
-    assert b'<!--successful this comment is to check that it is reached on test-->' in response.data
-    assert days_inserted > 0
+def test_refresh_rates_ecb(truncate_ecb__eur_exchange_rate, client, db_conn):
+    """
+    GIVEN a call to route ecb_rates/rates_ecb
+    WHEN the result is successful
+    THEN check that the values are correctly uploaded to ecb.eur_exchange_rate
+    """
+    cols = ['eur_exchange_rate_date', 'eur_exchange_rate_created_by', 'eur_exchange_rate_to_gbp',
+            'eur_exchange_rate_to_dollar']
+    response = call_to_ecb_api_exchange_rate(DAYS_TO_REGISTER)
+    exchange_df = from_xml_to_dataframe(response.text)
+
+    response_from_route = client.get_with_login('ecb_rates.refresh_rates_ecb', follow_redirects=True)
+    exchange_at_db = db_conn.query("SELECT * FROM ecb.eur_exchange_rate")
+
+    for col in ['eur_exchange_rate_to_dollar', 'eur_exchange_rate_to_gbp']:
+        exchange_df[col] = exchange_df[col].apply(lambda x: round(x, 4))
+    exchange_at_db['eur_exchange_rate_date'] = exchange_at_db['eur_exchange_rate_date'].apply(
+        lambda x: dt.datetime.strftime(x, '%Y-%m-%d'))
+
+    assert 200 == response_from_route.status_code
+    assert b'<!--successful this comment is to check that it is reached on test-->' in response_from_route.data
+    assert exchange_at_db[cols].equals(exchange_df[cols])  # this could not be true if the execution is done at midnight

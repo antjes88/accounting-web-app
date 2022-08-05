@@ -8,8 +8,6 @@
     <body>
         <div class="topnav" id="myTopnav">
             <a id="menulink" href="{{ url_for('home_page.home') }}" class="active">Main Menu</a>
-            <a id="cuentaslink" href="{{ url_for('accounting.accounting_menu') }}" >Incomes & Expenses</a>
-            <a id="haberlink" href="{{ url_for('assets.assets_menu') }}" >Assets</a>
             <a id="logoutlink" href="{{ url_for('login_page.logout') }}">Log out</a>
 
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">
@@ -35,14 +33,6 @@
             <div class="login-screen">
                 <div class="app-title">
                     <h1>Main Menu</h1>
-                </div>
-                <div class="control-group">
-                    <a id="alink" href="{{ url_for('accounting.accounting_menu') }}"
-                       class="btn btn-primary btn-large btn-block">Incomes & Expenses</a>
-                </div>
-                <div class="control-group">
-                    <a id="blink" href="{{ url_for('assets.assets_menu') }}"
-                       class="btn btn-primary btn-large btn-block">Assets</a>
                 </div>
                 <div class="control-group">
                     <a id="clink" href="{{ url_for('ecb_rates.refresh_rates_ecb') }}"

@@ -7,6 +7,10 @@
 
 \i sql_scripts/schema_creation.sql
 
+\i sql_scripts/delete_all_tables.sql
+
+\i sql_scripts/ecb/ecb_eur_exchange_rate.sql
+
 \i sql_scripts/gl/gl_account.sql
 \i sql_scripts/gl/gl_currency.sql
 \i sql_scripts/gl/gl_sector.sql

@@ -161,7 +161,7 @@ class SqLiteDatabase:
         Method to retrieve data from a table. It can convert dates from the format in the database to the format desired
         :param statement: sql statement
         :param time_format: list of columns to transform to datetime
-        :return: df: dataframe of the sql
+        :return: data: dataframe of the sql
         """
         conn = self.create_connection(both=False)
         df = pd.read_sql_query(statement, conn)
