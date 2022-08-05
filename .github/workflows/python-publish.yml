@@ -25,8 +25,5 @@ jobs:
       - name: Test with pytest
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
-          PASSWORD: ${{ secrets.PASSWORD_TEST }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY_TEST }}
-          USER: ${{ secrets.USER_TEST }}
         run: |
           python -m pytest -vv
