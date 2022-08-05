@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+        <title>AJB - Successful!</title>
+    </head>
+    <body>
+    <!--THIS ALL IS FOR THE TOP MENU-->
+    <div class="topnav" id="myTopnav">
+        <a id="menulink" href="{{ url_for('home_page.home') }}" class="active">Main Menu</a>
+        <a id="logoutlink" href="{{ url_for('login_page.logout') }}">Log out</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <img alt="Image dropdown list" src="/static/image/dropdown.png" style="margin:0; display:block;">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <script>
+                    function myFunction() {
+                      var x = document.getElementById("myTopnav");
+                      if (x.className === "topnav") {
+                        x.className += " responsive";
+                      } else {
+                        x.className = "topnav";
+                      }
+                    }
+    </script>
+
+    <!--successful this comment is to check that it is reached on test-->
+    <center>
+        <img alt="My Logo" src="/static/image/logo.png" class="mylogo">
+    </center>
+    <div class="new-entry">
+        <div class="login-screen" style="background-color: #00ff00">
+            <div class="app-title-success">
+                <h1>Operation has been Successful!</h1>
+            </div>
+            <div class="login-form">
+                <div class="control-group">
+                    <a id="gobacktolink" href="{{ url_for('%s.%s' % (blueprint, go_back_to)) }}"
+                       class="btn btn-primary btn-large btn-block" style="background: #484848;">Repeat operation</a>
+                </div>
+                <div class="control-group">
+                    <a id="alink" href="{{ url_for('home_page.home') }}"
+                       class="btn btn-primary btn-large btn-block" style="background: #484848;">Back to Main Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

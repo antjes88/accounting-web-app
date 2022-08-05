@@ -1,0 +1,36 @@
+\echo info--   start batch deploy of scaffolding
+\echo info--
+\set ON_ERROR_STOP on
+\set VERBOSITY verbose
+\timing on
+
+
+\i sql_scripts/schema_creation.sql
+
+\i sql_scripts/delete_all_tables.sql
+
+\i sql_scripts/ecb/ecb_eur_exchange_rate.sql
+
+\i sql_scripts/gl/gl_account.sql
+\i sql_scripts/gl/gl_currency.sql
+\i sql_scripts/gl/gl_sector.sql
+\i sql_scripts/gl/gl_country.sql
+\i sql_scripts/gl/gl_equity_family_type.sql
+
+\i sql_scripts/gl/gl_equity_type.sql
+
+\i sql_scripts/gl/gl_equity_sub_type.sql
+\i sql_scripts/gl/gl_platform.sql
+\i sql_scripts/gl/gl_equity.sql
+
+\i sql_scripts/gl/gl_equity_sub_type_to_equity.sql
+\i sql_scripts/gl/gl_platform_account.sql
+
+\i sql_scripts/gl/gl_sector_composition.sql
+\i sql_scripts/gl/gl_country_composition.sql
+\i sql_scripts/gl/gl_transaction.sql
+\i sql_scripts/gl/gl_account_to_equity.sql
+\i sql_scripts/gl/gl_equity_balance.sql
+
+
+\echo info--   run
