@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <title>Accounting - New Record</title>
+</head>
+<body>
+<!--THIS ALL IS FOR THE TOP MENU-->
+<div class="topnav" id="myTopnav">
+        <a id="menulink" href="{{ url_for('home_page.home') }}" >Main Menu</a>
+        <a id="cuentaslink" href="{{ url_for('accounting.accounting_menu') }}" class="active">Accounting</a>
+        <a id="logoutlink" href="{{ url_for('login_page.logout') }}">Log out</a>
+
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <img alt="Image dropdown list" src="/static/image/dropdown.png" style="margin:0; display:block;">
+        <i class="fa fa-bars"></i>
+    </a>
+</div>
+
+<script>
+                function myFunction() {
+                  var x = document.getElementById("myTopnav");
+                  if (x.className === "topnav") {
+                    x.className += " responsive";
+                  } else {
+                    x.className = "topnav";
+                  }
+                }
+            </script>
+
+<!--accounting_new_record this comment is to check that it is reached on test-->
+<center>
+    <img alt="My Logo" src="/static/image/logo.png" class="mylogo">
+</center>
+<div class="new-entry">
+    <div class="login-screen" style="width: 450px;">
+        <div class="app-title" style="padding-left: 50px; padding-right: 50px;">
+            <h1>Register new Transaction</h1>
+        </div>
+        <div class="login-form">
+            <div class="control-group" style="margin-bottom: -25px;">
+                <div class="control-groupinline" style="padding-right: 40px;">
+                    <h2>Debit</h2>
+                </div>
+                <div class="control-groupinline" style="padding-left: 40px;">
+                    <h2>Credit</h2>
+                </div>
+            </div>
+            <form action="" method="POST" novalidate>
+                <div class="control-group">
+                    {{ form.hidden_tag() }}
+                    <ul class="control-groupinline" style="margin-bottom: 0px;">
+                        {{ form.account_type_debit(class="custom-select") }}
+                        {{ form.account_type_credit(class="custom-select") }}
+                    </ul>
+                    {% for error in form.account_type_debit.errors %}
+                    <span style="color: red;">debit account type: {{ error }}</span>
+                    {% endfor %}
+                    {% for error in form.account_type_credit.errors %}
+                    <span style="color: red;">credit account type: {{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="control-group">
+                    {{ form.hidden_tag() }}
+                    <div class="control-groupinline" style="margin-bottom: 0px;">
+                        {{ form.asset_account_debit(class="custom-select-hidden") }}
+                        {{ form.equity_account_debit(class="custom-select-hidden") }}
+                        {{ form.expense_account_debit(class="custom-select-hidden") }}
+                        {{ form.liability_account_debit(class="custom-select-hidden") }}
+                        {{ form.revenue_account_debit(class="custom-select-hidden") }}
+
+                        {{ form.asset_account_credit(class="custom-select-hidden") }}
+                        {{ form.equity_account_credit(class="custom-select-hidden") }}
+                        {{ form.expense_account_credit(class="custom-select-hidden") }}
+                        {{ form.liability_account_credit(class="custom-select-hidden") }}
+                        {{ form.revenue_account_credit(class="custom-select-hidden") }}
+                    </div>
+                    {% for error in form.asset_account_debit.errors %}
+                    <span style="color: red;">asset debit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.equity_account_debit.errors %}
+                    <span style="color: red;">equity debit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.expense_account_debit.errors %}
+                    <span style="color: red;">expense debit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.liability_account_debit.errors %}
+                    <span style="color: red;">liability debit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.revenue_account_debit.errors %}
+                    <span style="color: red;">revenue debit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.asset_account_credit.errors %}
+                    <span style="color: red;">asset credit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.equity_account_credit.errors %}
+                    <span style="color: red;">equity credit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.expense_account_credit.errors %}
+                    <span style="color: red;">expense credit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.liability_account_credit.errors %}
+                    <span style="color: red;">liability credit: {{ error }}</span>
+                    {% endfor %}
+
+                    {% for error in form.revenue_account_credit.errors %}
+                    <span style="color: red;">revenue credit: {{ error }}</span>
+                    {% endfor %}
+
+                </div>
+                <div class="control-group">
+                    {{ form.amount(placeholder='Amount', type='text') }}
+                    <br>
+                    {% for error in form.amount.errors %}
+                    <span style="color: red;">amount: {{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="control-group">
+                    {{ form.description(placeholder='Description', type='text') }}
+                    <br>
+                    {% for error in form.description.errors %}
+                    <span style="color: red;">description: {{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="control-group">
+                    {{ form.date(type="date") }}
+                    <br>
+                    {% for error in form.date.errors %}
+                    <span style="color: red;">date: {{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="control-group">
+                    <input type="submit" value="Submit new Entry" class="btn btn-primary btn-large btn-block">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+var debit = document.getElementById("debit");
+debit.onchange = function() {
+
+  var asset_debit = document.getElementById("asset_debit");
+  var equity_debit = document.getElementById("equity_debit");
+  var expense_debit = document.getElementById("expense_debit");
+  var liability_debit = document.getElementById("liability_debit");
+  var revenue_debit = document.getElementById("revenue_debit");
+
+  if (debit.value === "Asset") {
+    asset_debit.classList.remove("custom-select-hidden")
+    asset_debit.classList.add("custom-select")
+
+    equity_debit.classList.remove("custom-select")
+    equity_debit.classList.add("custom-select-hidden")
+
+    expense_debit.classList.remove("custom-select")
+    expense_debit.classList.add("custom-select-hidden")
+
+    liability_debit.classList.remove("custom-select")
+    liability_debit.classList.add("custom-select-hidden")
+
+    revenue_debit.classList.remove("custom-select")
+    revenue_debit.classList.add("custom-select-hidden")
+
+  } else if (debit.value === "Equity") {
+    equity_debit.classList.remove("custom-select-hidden")
+    equity_debit.classList.add("custom-select")
+
+    asset_debit.classList.remove("custom-select")
+    asset_debit.classList.add("custom-select-hidden")
+
+    expense_debit.classList.remove("custom-select")
+    expense_debit.classList.add("custom-select-hidden")
+
+    liability_debit.classList.remove("custom-select")
+    liability_debit.classList.add("custom-select-hidden")
+
+    revenue_debit.classList.remove("custom-select")
+    revenue_debit.classList.add("custom-select-hidden")
+  } else if (debit.value === "Expense") {
+    expense_debit.classList.remove("custom-select-hidden")
+    expense_debit.classList.add("custom-select")
+
+    asset_debit.classList.remove("custom-select")
+    asset_debit.classList.add("custom-select-hidden")
+
+    equity_debit.classList.remove("custom-select")
+    equity_debit.classList.add("custom-select-hidden")
+
+    liability_debit.classList.remove("custom-select")
+    liability_debit.classList.add("custom-select-hidden")
+
+    revenue_debit.classList.remove("custom-select")
+    revenue_debit.classList.add("custom-select-hidden")
+  } else if (debit.value === "Liability") {
+    liability_debit.classList.remove("custom-select-hidden")
+    liability_debit.classList.add("custom-select")
+
+    asset_debit.classList.remove("custom-select")
+    asset_debit.classList.add("custom-select-hidden")
+
+    equity_debit.classList.remove("custom-select")
+    equity_debit.classList.add("custom-select-hidden")
+
+    expense_debit.classList.remove("custom-select")
+    expense_debit.classList.add("custom-select-hidden")
+
+    revenue_debit.classList.remove("custom-select")
+    revenue_debit.classList.add("custom-select-hidden")
+  } else if (debit.value === "Revenue") {
+    revenue_debit.classList.remove("custom-select-hidden")
+    revenue_debit.classList.add("custom-select")
+
+    asset_debit.classList.remove("custom-select")
+    asset_debit.classList.add("custom-select-hidden")
+
+    equity_debit.classList.remove("custom-select")
+    equity_debit.classList.add("custom-select-hidden")
+
+    expense_debit.classList.remove("custom-select")
+    expense_debit.classList.add("custom-select-hidden")
+
+    liability_debit.classList.remove("custom-select")
+    liability_debit.classList.add("custom-select-hidden")
+  } else {
+    asset_debit.classList.remove("custom-select")
+    asset_debit.classList.add("custom-select-hidden")
+
+    equity_debit.classList.remove("custom-select")
+    equity_debit.classList.add("custom-select-hidden")
+
+    expense_debit.classList.remove("custom-select")
+    expense_debit.classList.add("custom-select-hidden")
+
+    liability_debit.classList.remove("custom-select")
+    liability_debit.classList.add("custom-select-hidden")
+
+    revenue_debit.classList.remove("custom-select")
+    revenue_debit.classList.add("custom-select-hidden")
+  }
+}
+
+
+var credit = document.getElementById("credit");
+credit.onchange = function() {
+
+  var asset_credit = document.getElementById("asset_credit");
+  var equity_credit = document.getElementById("equity_credit");
+  var expense_credit = document.getElementById("expense_credit");
+  var liability_credit = document.getElementById("liability_credit");
+  var revenue_credit = document.getElementById("revenue_credit");
+
+  if (credit.value === "Asset") {
+    asset_credit.classList.remove("custom-select-hidden")
+    asset_credit.classList.add("custom-select")
+
+    equity_credit.classList.remove("custom-select")
+    equity_credit.classList.add("custom-select-hidden")
+
+    expense_credit.classList.remove("custom-select")
+    expense_credit.classList.add("custom-select-hidden")
+
+    liability_credit.classList.remove("custom-select")
+    liability_credit.classList.add("custom-select-hidden")
+
+    revenue_credit.classList.remove("custom-select")
+    revenue_credit.classList.add("custom-select-hidden")
+
+  } else if (credit.value === "Equity") {
+    equity_credit.classList.remove("custom-select-hidden")
+    equity_credit.classList.add("custom-select")
+
+    asset_credit.classList.remove("custom-select")
+    asset_credit.classList.add("custom-select-hidden")
+
+    expense_credit.classList.remove("custom-select")
+    expense_credit.classList.add("custom-select-hidden")
+
+    liability_credit.classList.remove("custom-select")
+    liability_credit.classList.add("custom-select-hidden")
+
+    revenue_credit.classList.remove("custom-select")
+    revenue_credit.classList.add("custom-select-hidden")
+  } else if (credit.value === "Expense") {
+    expense_credit.classList.remove("custom-select-hidden")
+    expense_credit.classList.add("custom-select")
+
+    asset_credit.classList.remove("custom-select")
+    asset_credit.classList.add("custom-select-hidden")
+
+    equity_credit.classList.remove("custom-select")
+    equity_credit.classList.add("custom-select-hidden")
+
+    liability_credit.classList.remove("custom-select")
+    liability_credit.classList.add("custom-select-hidden")
+
+    revenue_credit.classList.remove("custom-select")
+    revenue_credit.classList.add("custom-select-hidden")
+  } else if (credit.value === "Liability") {
+    liability_credit.classList.remove("custom-select-hidden")
+    liability_credit.classList.add("custom-select")
+
+    asset_credit.classList.remove("custom-select")
+    asset_credit.classList.add("custom-select-hidden")
+
+    equity_credit.classList.remove("custom-select")
+    equity_credit.classList.add("custom-select-hidden")
+
+    expense_credit.classList.remove("custom-select")
+    expense_credit.classList.add("custom-select-hidden")
+
+    revenue_credit.classList.remove("custom-select")
+    revenue_credit.classList.add("custom-select-hidden")
+  } else if (credit.value === "Revenue") {
+    revenue_credit.classList.remove("custom-select-hidden")
+    revenue_credit.classList.add("custom-select")
+
+    asset_credit.classList.remove("custom-select")
+    asset_credit.classList.add("custom-select-hidden")
+
+    equity_credit.classList.remove("custom-select")
+    equity_credit.classList.add("custom-select-hidden")
+
+    expense_credit.classList.remove("custom-select")
+    expense_credit.classList.add("custom-select-hidden")
+
+    liability_credit.classList.remove("custom-select")
+    liability_credit.classList.add("custom-select-hidden")
+  } else {
+    asset_credit.classList.remove("custom-select")
+    asset_credit.classList.add("custom-select-hidden")
+
+    equity_credit.classList.remove("custom-select")
+    equity_credit.classList.add("custom-select-hidden")
+
+    expense_credit.classList.remove("custom-select")
+    expense_credit.classList.add("custom-select-hidden")
+
+    liability_credit.classList.remove("custom-select")
+    liability_credit.classList.add("custom-select-hidden")
+
+    revenue_credit.classList.remove("custom-select")
+    revenue_credit.classList.add("custom-select-hidden")
+  }
+}
+</script>
+
+
+</body>
+</html>

@@ -1,100 +1,97 @@
 # WORK IN PROGRESS
 # What is this?
-This is a personal project to build a WebApp for expenses and incomes accounting & equity control.  
-It is build in Python-Flask for the input of data while the visualisation is done with Dash-Plotly. It is ready to
-be deployed on Heroku as a container.
-Currently only is implemented the 
 
-## Execution & Deployment
-On this section you will find how to run the code locally, with docker/docker-compose or how to deploy to Heroku.
+This is a personal project to build a personal accounting solution. 
+The main objectives of this solution are:
+- Keep track of incomes.
+- Keep track of expenses.
+- Keep track of imaginary account balances*.
+- Keep track of buys and sells of investments.
+- Learn a bit about Accounting. 
+- Create a user-friendly interface to record incomes and expenses.
+- Learn to test a Flask app with Pytest.
 
-### Python environment
-To build a local version of the solution you will need an environment with python 3.7.0 and the libraries listed in 
-requirements.txt. In case you do not have such environment, you can create it as follows with conda:
+_*Basically, I allocate my incomes to imaginary accounts, such as: Leisure Account, Emergency Fund Account, Training 
+Account, etc. These are not related to a real Bank Account, as it would not be neither practical nor efficient to have 
+that many bank accounts. It does not follow accounting laws, but it is not use for company accounting, but for personal
+purposes, so it is not a problem._
+
+Taken all these objectives into consideration, it makes sense to use double entry accounting method which is based 
+on fundamental accounting equation:
+```text
+ASSETS = LIABILITIES + EQUITY + REVENUES - EXPENSES
+```
+Where:
+- **Asset**: is a resource with economic value that an individual, corporation, or country owns. Such as: cash, houses,
+cars...
+- **Liability**: something a person or company owes, usually a sum of money.
+- **Equity**: it is everything that belongs to the company’s shareholders (owners, investors): company’s shares, 
+investments into the company, retained earnings, etc.
+- **Revenues**: any incomes, such as sale of products. 
+- **Expenses**: cost of operations that a company incurs to generate revenue. Such as buying raw material.
+
+Each of these variables in the equation is formed by a hierarchy of accounts. This is usually called, 
+[Chart of Accounts](https://en.wikipedia.org/wiki/Chart_of_accounts). For example purposes, my personal chart of 
+accounts partially looks like:
+* Assets
+  * Imaginary Accounts
+    * Landing Account
+    * Usual Expenses Account
+    * Leisure Account
+    * Emergency Fund Account
+* Incomes
+  * Salary
+    * Basic Salary
+    * Bonus
+* Expenses
+  * Housing
+    * Rent
+    * Property Taxes
+  * Food
+    * Groceries
+    * Restaurants
+  * Leisure
+    * Books
+
+Each transaction is represented as 2 (or more) entries on the ledger corresponding to the variables in the equation. 
+It has to be 2 entries by transaction so the equation is always balanced, that is why it is called double entry system.
+When an entry to the ledger is an increase on the left side of the equation* it is a debit, when it is a decrease, it is
+a credit. On the other side, when it is an increase on the right side of the equation it is a credit, and, when it is a 
+decrease, it is a debit. So, each transaction will have at least one debit entry on the ledger and one credit entry on 
+the ledger, being the amount of debits and credits equal for every transaction.  
+
+_*Left side of the equation is formed by the assets and the expenses. Take into account that on the equation, as 
+presented above, expenses are negative on the right side._ 
+
+To try to clarify this, let's create some entries on the ledger:
+1. It is the end of the month and our employer send us our salary (100u). This monthly payment is only related to our 
+basic salary, no bonus. So it will be a credit on account Basic Salary, and a debit on Landing Account. We use Landing 
+Account as a proxy to make recording easier.
+2. Now is time to allocate the money to the useful accounts. So, there is a credit on Landing Account of 100u, a debit 
+on Usual Expenses Account of 50u and a debit on Leisure Account of 50u.
+3. A couple of days later is time to pay the rent. So there is a credit on Usual Expenses Account of 30u and a Debit on 
+Rent account of 30u.
+4. Finally on Saturday night we go to a restaurant. So there is a credit on Leisure Account of 10u and a debit on 
+Restaurant Account of 10u.
+
+| Transaction | Assets                                                                                | Liabilites | Equity | Revenues             | Expenses         |
+|-------------|---------------------------------------------------------------------------------------|------------|--------|----------------------|------------------|
+| 1           | Landing Account dr  100                                                               |            |        | Basic Salary cr 100  |                  |
+| 2           | Landing Account cr 100 <br/> Usual Expenses Account dr 50 <br/> Leisure Account dr 50 |            |        |                      |                  |
+| 3           | Usual Expenses Account cr 30                                                          |            |        |                      | Rent dr 30       |
+| 4           | Leisure Account cr 10                                                                 |            |        |                      | Restaurant dr 10 |
+
+The data model for this solution is highly inspired by 1
+[Database for Financial Accounting Application II: Infrastructure](https://www.codeproject.com/Articles/5163401/Database-for-Financial-Accounting-Application-II).
+
+![Accounting_db_data_model](python/static/image/accounting_db.drawio.png)
+
+PostgreSQL scripts can be found on folder PostgreSQL. Also, a Python-Flask application to create register into this 
+Accounting Database can be found on this project. 
+
+For further information in relation to the accounting database go to PostgreSQL/ReadMe.md. 
+For further information in relation to the accounting Web App go to python/ReadMe.md.
+
+# Bibliography
+1. [Database for Financial Accounting Application II: Infrastructure](https://www.codeproject.com/Articles/5163401/Database-for-Financial-Accounting-Application-II)
  
-```
-conda create -n [] python=3.8.0 pip
-pip install -r env/requirements.txt
-```
-
-To make last line to work you will need to change directory to the path where the project resided.
-
-### Environment Variables
-
-You will need to create a file called .env on the folder <path-to-project>/env with the next environment variables:
-
-```
-SECRET_KEY = [this is the secret key of your flask app] 
-USER = [name of user]
-PASSWORD = [werkzeug.security.generate_password_hash(your_password)]
-DATABASE_URL = [connection to main database where assests and account data is stored]
-```
-
-### Local execution with flask server
-To execute locally with the flask server:
-
-```
-set FLASK_APP=app.py
-flask run
-In case of error try: python -m flask run 
-```
-
-### Local execution with Docker
-In order to execute the webapp with Docker you will need to use the next code in your Terminal:
-
-```
-docker build -t app-cuentas .
-docker run -v [path-to-project]:/app -dp 8081:80 app-cuentas
-```
-
-### Local execution with Docker-compose
-In order to execute the webapp with Docker-compose you will need to use the next code in the Terminal:
-
-```
-docker-compose up
-```
-
-### Deployment to Heroku as Stack heroku-18 and framework python --deprecated
-In order to deploy to Heroku you will need to use the next code in the Terminal:
-```
-heroku login
-heroku git:remote -a [app-name]
-git push heroku master
-```
-
-Deprecation: Files under folder env/heroku-stack-heroku-18 has to be copied directly under root folder.
-
-### Deployment to Heroku as a Container
-First thing will be to create an app on Heroku. After that, the stack of the app has to be changed to container, 
-in order to do so, you can use next code on your CLI:
-
-```
-heroku login
-heroku stack:set container --app [app-name]
-```
-
-After that, the easier way will be to connect the app to a GitHub repository where the project resides. 
-It will be also a good idea to check for automatic deploys. This way, with each push to GitHub of your code, Heroku 
-automatically will create a new image and changes will be applied.
-
-Also, you will need to create several env variables on settings, the same ones that you can find on section
-_Environment Variables_. Tables definition can be found on section _Tables definition_.
-
-
-## PostgreSQL code deployment
-
-To execute build_scaffolding:
-```commandline
-{path to psql executable} -h {server host} -U {user name} -d {database name} -p {port} -f {path to build_scaffolding.psql} -L {path to file where to save logs}
-```
-
-
-## Testing
-You need to have installed pytest on your local environment. 
-The scope of the terminal should be located on the root folder of this repository. 
-To execute tests locally you have to run on the terminal:
-
-```
-python -m pytest -vv
-```
-

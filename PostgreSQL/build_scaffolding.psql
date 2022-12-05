@@ -4,33 +4,33 @@
 \set VERBOSITY verbose
 \timing on
 
-
+\echo info-- Creating elements at destination database
 \i sql_scripts/schema_creation.sql
 
-\i sql_scripts/delete_all_tables.sql
+\i sql_scripts/accounting/tables/account_types.sql
+\i sql_scripts/accounting/tables/entry_types.sql
+\i sql_scripts/accounting/tables/transactions.sql
+\i sql_scripts/accounting/tables/accounts.sql
+\i sql_scripts/accounting/tables/ledger_entries.sql
 
-\i sql_scripts/ecb/ecb_eur_exchange_rate.sql
+-----------------------------------------------------------
+\echo info-- Granting user permissions
+SELECT (current_database() like '%dev%') AS is_dev_db \gset
+\if :is_dev_db
+    \echo info-- granting permission user for dev environment
+    \i sql_scripts/accounting/permissions/dev.sql
+\endif
 
-\i sql_scripts/gl/gl_account.sql
-\i sql_scripts/gl/gl_currency.sql
-\i sql_scripts/gl/gl_sector.sql
-\i sql_scripts/gl/gl_country.sql
-\i sql_scripts/gl/gl_equity_family_type.sql
+SELECT (current_database() like '%test%') AS is_test_db \gset
+\if :is_test_db
+    \echo info-- granting permission user for test environment
+    \i sql_scripts/accounting/permissions/test.sql
+\endif
 
-\i sql_scripts/gl/gl_equity_type.sql
-
-\i sql_scripts/gl/gl_equity_sub_type.sql
-\i sql_scripts/gl/gl_platform.sql
-\i sql_scripts/gl/gl_equity.sql
-
-\i sql_scripts/gl/gl_equity_sub_type_to_equity.sql
-\i sql_scripts/gl/gl_platform_account.sql
-
-\i sql_scripts/gl/gl_sector_composition.sql
-\i sql_scripts/gl/gl_country_composition.sql
-\i sql_scripts/gl/gl_transaction.sql
-\i sql_scripts/gl/gl_account_to_equity.sql
-\i sql_scripts/gl/gl_equity_balance.sql
-
+SELECT (current_database() like '%prod%') AS is_prod_db \gset
+\if :is_prod_db
+    \echo info-- granting permission user for prod environment
+    \i sql_scripts/accounting/permissions/prod.sql
+\endif
 
 \echo info--   run
