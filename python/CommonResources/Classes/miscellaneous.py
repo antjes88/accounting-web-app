@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from flask_login import login_required
 
 
@@ -87,7 +86,6 @@ class Miscellaneous:
                 for line in file:
                     line_list = line.split("=")
                     os.environ[line_list[0].strip()] = line_list[1].strip()
-            # load_dotenv(dotenv_path=env_path)
 
     @staticmethod
     def protect_dash_views_with_login(dash_app):

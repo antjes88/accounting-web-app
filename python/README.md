@@ -1,6 +1,10 @@
 # UNDER CONSTRUCTION
-## Execution & Deployment
-On this section you will find how to run the code locally, and how to deploy to GCP App Engine.
+## Introduction
+Currently, the web app has an interface to populate new transaction into the accounting database. This is protected by 
+login.
+
+## Execution
+On this section you will find how to run the code locally.
 
 ### Python environment
 To build a local version of the solution you will need an environment with python 3.8.0 and the libraries listed in 

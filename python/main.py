@@ -12,12 +12,12 @@ from blueprints.home import home_page
 from blueprints.accounting import accounting
 
 # flask app creation
-application = Flask(__name__)
+app = Flask(__name__)
 
 # secret key definition
-application.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
 # adding blueprints
-application.register_blueprint(login_blueprint(application, 'home_page.home'))
-application.register_blueprint(home_page)
-application.register_blueprint(accounting)
+app.register_blueprint(login_blueprint(app, 'home_page.home'))
+app.register_blueprint(home_page)
+app.register_blueprint(accounting)
