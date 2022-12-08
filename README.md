@@ -89,6 +89,10 @@ The data model for this solution is highly inspired by 1
 PostgreSQL scripts can be found on folder PostgreSQL. Also, a Python-Flask application to create register into this 
 Accounting Database can be found on this project. 
 
+## Terraform
+This solution is Deployed with Terraform as a standard service in App Engine(GAE). You will need to uncomment the 
+enabling of the App Engine on main.tf if you have not done it before.
+
 For further information in relation to the accounting database go to PostgreSQL/ReadMe.md. 
 For further information in relation to the accounting Web App go to python/ReadMe.md.
 

@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash
 from postgresql_interface.postgresql_interface import postgres_sql_connector_factory
 
 # own files
-from main import application
+from main import app
 from CommonResources.Classes.flask_csrf_test_client import *
 from CommonResources.Classes.miscellaneous import Miscellaneous
 
@@ -54,11 +54,11 @@ def client(overwrite_environment_variables):
         overwrite_environment_variables: fixture that overwrite environment variables
     Returns: test client for the application build as CommonResources.Classes.flask_csrf_test_client.TestFlaskClient
     """
-    application.config['TESTING'] = True
-    application.config['SERVER_NAME'] = 'Test.localDomain'
-    application.test_client_class = TestFlaskClient
+    app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'Test.localDomain'
+    app.test_client_class = TestFlaskClient
 
-    client = application.test_client()
+    client = app.test_client()
     client.setup(CLIENT_PASSWORD_FOR_PYTEST_TEST, CLIENT_USER_FOR_PYTEST_TEST, 'login_page.login')
 
     return client
@@ -71,11 +71,11 @@ def client_wrong_credentials():
 
     Returns: test client for the application build as CommonResources.Classes.flask_csrf_test_client.TestFlaskClient
     """
-    application.config['TESTING'] = True
-    application.config['SERVER_NAME'] = 'Test.localDomain'
-    application.test_client_class = TestFlaskClient
+    app.config['TESTING'] = True
+    app.config['SERVER_NAME'] = 'Test.localDomain'
+    app.test_client_class = TestFlaskClient
 
-    client = application.test_client()
+    client = app.test_client()
     client.setup(123456, 'wrong_user', 'login_page.login')
 
     return client

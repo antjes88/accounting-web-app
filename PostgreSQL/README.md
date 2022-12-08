@@ -8,7 +8,7 @@ This scaffolding can be executed with the below command on your CLI:
 ```
 
 You will need to create a file on folder _PostgreSQL/sql_scripts/accounting/permissions_ granting permissions to user.
-This permissions are based on the environment. Scaffolding will identify the environment by the name of the database, 
+These permissions are based on the environment. Scaffolding will identify the environment by the name of the database, 
 so:
     - database_name like '%dev%' -> dev environment -> file name: dev.sql
     - database_name like '%test%' -> test environment -> file name: test.sql
@@ -16,7 +16,19 @@ so:
 
 test.sql file should be as follows:
 ```text
-CREATE USER IF NOT EXISTS {test_user} WITH PASSWORD '{test_user_password}';
+DO
+$do$
+BEGIN
+   IF EXISTS (
+      SELECT FROM pg_catalog.pg_roles
+      WHERE  rolname = '{test_user}') THEN
+
+      RAISE NOTICE 'Role "{test_user}" already exists. Skipping.';
+   ELSE
+      CREATE USER {test_user} WITH PASSWORD '{test_user_password}';
+   END IF;
+END
+$do$;
 
 GRANT ALL ON SCHEMA accounting to {test_user};
 GRANT ALL ON TABLE accounting.account_types TO {test_user};
