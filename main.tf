@@ -8,13 +8,10 @@ resource "google_service_account" "default" {
   display_name = "Accounting WebApp Engine App"
 }
 
-resource "google_project_iam_binding" "sql_client" {
+resource "google_project_iam_member" "sql_client" {
   project = var.project_id
   role    = "roles/cloudsql.client"
-
-  members = [
-    "serviceAccount:${google_service_account.default.email}",
-  ]
+  member  = "serviceAccount:${google_service_account.default.email}"
 }
 
 resource "google_project_iam_member" "gae_api" {
